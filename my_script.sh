@@ -1,24 +1,17 @@
 #!/bin/bash
 
-# Moving to root user
-sudo -i
-
 # Update the package repository
-yum update -y
+sudo apt-get update -y
 
 # Install Apache
-yum install httpd -y
+sudo apt-get install apache2 -y
 
 # Start Apache
-systemctl start httpd
-systemctl enable httpd
+sudo systemctl start apache2
+sudo systemctl enable apache2
 
 # Install MySQL
-yum install mariadb-server mariadb -y
-
-# Start MySQL
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
+sudo apt-get install mysql-server -y
 
 # Secure MySQL installation
 sudo mysql_secure_installation <<EOF
@@ -32,15 +25,15 @@ y
 y
 EOF
 
-# Install PHP
-yum install php php-mysql -y
+# Install PHP and PHP-MySQL module
+sudo apt-get install php php-mysql -y
 
 # Restart Apache to load PHP
-systemctl restart httpd
+sudo systemctl restart apache2
 
 # Test PHP
-echo "<?php phpinfo(); ?>" | tee /var/www/html/info.php
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
 
 # Adjust firewall to allow HTTP traffic
-firewall-cmd --permanent --add-service-http
-firewall-cmd --reload
+sudo ufw allow 'Apache'
+sudo ufw enable
